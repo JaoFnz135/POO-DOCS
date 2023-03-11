@@ -2,37 +2,29 @@ from datetime import *
 #Criação da classe consulta.
 class consulta:
     #Define o construtor, fazendo com que os atributos sejam 'preco' e 'consulta' recebam valores na criação do objeto. 
-    def __init__(self, data, codigo, nome_medico, nome_paciente, area_medica,  preco):
-        self.data = data
-        self.codigo = codigo
-        self.nome_medico = nome_medico
-        self.nome_paciente = nome_paciente
-        self.area_medica = area_medica
-        self.preco = preco
-         
+    def __init__(self, data, nome_paciente,  area_medica, nome_medico,  preco, codigo):
+        self.data = data#importante
+        self.nome_paciente = nome_paciente#importante
+        self.area_medica = area_medica#importante
+        self.nome_medico = nome_medico#importante
+        self.preco = preco#importante
+        self.codigo = codigo #importante
     def __str__(self):
-        pass
-    
-    def data_consulta(self, data):
-        self.data = data
+        return f'Consulta {self.codigo}: {self.nome_paciente} - {self.area_medica} ({self.nome_medico}) - {self.data}'
+        
+        
     def cod_consulta(self):
-        self.codigo += 1 
+        self.cod_consulta += 1 
     def nome_pacient(self, nome_paci):
         self.nome_paciente = nome_paci
     def nome_medi(self, nome_med):
         self.nome_medico = nome_med
     def area(self, area_med):
         self.area_medica = area_med
-    def preco_cons(self):
-        self.preco = 200.00
-   
-    
-        
    
 #Mostra ao cliente o menu do consultorio e recebe a ação que ele quer executar no sistema.
 #Criar um arquivo .py para guardar o menu seria melhor, deixaria o principal mais limpo.
 #FEITO
-consult = consulta('', 0,'', '','', 0.0)
 def menu():
     while True:
         try:
@@ -51,10 +43,10 @@ def menu():
 #FEITO?
 def areas_med(esc):
     dic_areamed = {}
-    dic_areamed['pediatria'] = 'Arnaldo'
-    dic_areamed['cardiologia'] = 'Laura'
-    dic_areamed['dermatologia'] = 'Jonas'
-    dic_areamed['urologista'] = 'Carlos'
+    dic_areamed['Pediatria'] = 'Arnaldo'
+    dic_areamed['Cardiologia'] = 'Laura'
+    dic_areamed['Dermatologia'] = 'Jonas'
+    dic_areamed['Urologia'] = 'Carlos'
     cont = 1
     for key in dic_areamed:
             if esc == cont:
@@ -66,44 +58,41 @@ def areas_med(esc):
     
     return areamed, nomemedic
 
-
+#Verfica se a data marcada pra consulta não está errada, como cair num dia que já passou ou em um fim de semana
 def escolher_data():
     fds = [5, 6]
     d = datetime.strptime(input("Data da consulta: "),"%d/%m/%Y").date()
     if d <= date.today() or d.weekday() in fds:
-        raise ValueError("Data de consulta menor que data atual.")
+            raise ValueError("Data de consulta menor que data atual.")
     else:
-         d = d.strftime('%d/%m/%Y')
-    return d
+        data = d.strftime("%d/%m/%Y")
+    return data
     
-def criar_consulta():
+def criar_consulta(l):
     while True:
         try:
             data = escolher_data()
             nome = input('Nome do paciente: ')
             area = int(input('Para qual área é a consulta: \n1-Pediatria \n2-Cardiologia \n3-Dermatologia \n4-Urologia \n>>> '))
             area_med, nome_med = areas_med(area) 
-            print(f'\nPaciente: {nome} \nData da consulta: {data} \nPara a área de: {area_med} \nMedico(a): {nome_med}\n')
-            break
+            preco = 300
+            l.append(consulta(data, nome, area_med, nome_med, preco))
+            consulta_atual = l[-1]
+            print(consulta_atual)
         except:
             print('Houve um erro. Por favor, preencha os campos novamente.')
-            
-    return data, nome, area_med, nome_med
+
 def main():
-    
     lista_consultas = []
     while True:
         try:
             r = menu()
             if r == 1:
-                data, nome, area_med, nome_med = criar_consulta()
-                cod = consult.cod_consulta()
-                preco = consult.preco_cons()
-                lista_consultas.append(consulta(data, cod, nome_med, nome, area_med, preco))
-                print(f'{lista_consultas}')
+                criar_consulta(lista_consultas)
+                
         except:
             print('Erro.')
             
         
 if __name__ == '__main__':
-    main()
+        main()
